@@ -30,6 +30,7 @@ void initialize_tasks(void)
 
 
 void setup() {
+  io_initialize_tiny_pico();
   io_initialize_serial();
   initialize_tasks();
 }
