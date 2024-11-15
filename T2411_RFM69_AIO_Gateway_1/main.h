@@ -36,6 +36,7 @@ typedef struct
   uint8_t  com69_task_index;
   uint8_t  wifi_task_index;
   uint8_t  mqtt_task_index;
+  uint8_t  super_task_index;
   msg69_st msg69;
   boolean  wifi_is_connected;
   boolean  radio_is_available;
@@ -57,13 +58,5 @@ typedef struct
   uint8_t second;
 } time_st;
 
-
-typedef struct
-{
-  uint16_t state;
-  uint16_t restart_cntr;
-  time_st time;
-  uint16_t light;
-} main_ctrl_st;
 
 #endif

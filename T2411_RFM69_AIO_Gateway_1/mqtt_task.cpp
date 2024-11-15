@@ -5,9 +5,10 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 #include "secrets.h"
+#include "supervisor.h"
 
 
-extern main_ctrl_st main_ctrl;
+
 extern WiFiClient client;
 
 const char MQTT_SERVER[] PROGMEM    = AIO_SERVER;
@@ -36,6 +37,8 @@ atask_st mqtt_handle    = {"MQTT Task      ", 1000,    0,     0,  255,    0,   1
 void mqtt_task_initialize(void)
 {
     gw_ctrl.mqtt_task_index = atask_add_new(&mqtt_handle);  
+    super_set_interval(SUPER_MQTT, 300000);
+    super_activate_alive_check(SUPER_MQTT, true );
 }
 
 void mqtt_task(void)
@@ -60,6 +63,7 @@ void mqtt_task(void)
             {
                 gw_ctrl.radio_is_available = false;
                 mqtt_handle.state = 10;
+                super_i_am_alive(SUPER_MQTT);
             }                  
             break;
 

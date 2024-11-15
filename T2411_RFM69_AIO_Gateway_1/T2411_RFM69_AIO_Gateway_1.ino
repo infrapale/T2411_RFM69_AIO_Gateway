@@ -4,6 +4,7 @@
 #include "com69.h"
 #include "wifi_task.h"
 #include "mqtt_task.h"
+#include "supervisor.h"
 
 
 
@@ -19,6 +20,7 @@ void initialize_tasks(void)
 {
   atask_initialize();
   atask_add_new(&debug_print_handle);
+  super_initialize();
   com69_initialize();
   wifi_task_initialize();
   mqtt_task_initialize();
@@ -40,5 +42,6 @@ void loop() {
 void debug_print_task(void)
 {
   atask_print_status(true);
+  super_print_status();
 }
 

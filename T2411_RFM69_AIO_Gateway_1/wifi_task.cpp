@@ -2,6 +2,8 @@
 #include "main.h"
 #include "secrets.h"
 #include "atask.h"
+#include "supervisor.h"
+
 
 const char* ssid     = WIFI_SSID;            //Main Router      
 const char* password = WIFI_PASS;            //Main Router Password
@@ -18,6 +20,8 @@ WiFiClient client;
 void wifi_task_initialize(void)
 {
   gw_ctrl.wifi_task_index = atask_add_new(&wifi_handle);  
+  super_set_interval(SUPER_WIFI, 300000);
+  super_activate_alive_check(SUPER_WIFI, true );
 }
 
 void wifi_task(void)
@@ -54,6 +58,7 @@ void wifi_task(void)
             break;
         case 2:   // 
             if (WiFi.status() != WL_CONNECTED) wifi_handle.state = 0;
+            else super_i_am_alive(SUPER_WIFI);
             break;
         case 3:   // 
             Serial.println("WiFi Retry limit reached -> WDT reset…");

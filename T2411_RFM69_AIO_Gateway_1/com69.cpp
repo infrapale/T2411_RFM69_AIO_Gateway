@@ -3,6 +3,7 @@
 #include "atask.h"
 #include "json.h"
 #include "mqtt_task.h"
+#include "supervisor.h"
 
 
 extern gw_ctrl_st gw_ctrl;
@@ -15,6 +16,8 @@ atask_st com69_handle   = {"Comm RM69 Task ",   10,    0,     0,  255,    0,   1
 void com69_initialize(void)
 {
   gw_ctrl.com69_task_index = atask_add_new(&com69_handle);
+  super_set_interval(SUPER_COM69, 300000);
+  super_activate_alive_check(SUPER_COM69, true );
 }
 
 void uart_clr_serial1_rx_buffer(void) {
@@ -73,10 +76,12 @@ void com69_task(void)
         SERIAL69.setTimeout(5000);
         RxStrNbrMsg.reserve(80);
         RxStrMsg.reserve(80);
+        super_activate_alive_check(SUPER_COM69, true);
         com69_handle.state = 10;
         break;
     case 10:
         RxStrNbrMsg = "";
+        super_i_am_alive(SUPER_COM69);
         atask_clear_cntr(gw_ctrl.com69_task_index);
         com69_handle.state = 11;
         break;
