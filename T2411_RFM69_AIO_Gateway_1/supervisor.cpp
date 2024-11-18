@@ -54,7 +54,7 @@ void super_set_interval(super_tasks_et task_indx, uint32_t new_ival)
 void super_wdt_begin(uint32_t d_ms)
 {
     if (d_ms > 8300) d_ms= 8300;
-    if (io_internal_wd_is_anabled()) rp2040.wdt_begin(d_ms);
+    //if (io_internal_wd_is_anabled()) rp2040.wdt_begin(d_ms);
 }
 
 void super_wdt_reset(void)

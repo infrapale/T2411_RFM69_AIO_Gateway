@@ -1,3 +1,8 @@
+/******************************************************************************
+
+*******************************************************************************
+******************************************************************************/
+
 #include "main.h"
 #include "io.h"
 #include "atask.h"
@@ -30,6 +35,7 @@ void initialize_tasks(void)
 
 
 void setup() {
+  delay(3000);
   io_initialize_tiny_pico();
   io_initialize_serial();
   initialize_tasks();
@@ -44,5 +50,6 @@ void debug_print_task(void)
 {
   atask_print_status(true);
   super_print_status();
+  mqtt_print_values();
 }
 

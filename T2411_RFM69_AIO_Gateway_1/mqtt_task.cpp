@@ -16,17 +16,27 @@ const char MQTT_USERNAME[] PROGMEM  = AIO_USERNAME;
 const char MQTT_PASSWORD[] PROGMEM  = AIO_KEY;
 
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, IO_USERNAME, IO_KEY);
-Adafruit_MQTT_Publish test_feed_1  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-e6-temp");
-Adafruit_MQTT_Publish test_feed_2  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-ea-temp");
-Adafruit_MQTT_Publish test_feed_3  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-ea-rssi");
-Adafruit_MQTT_Publish test_feed_4  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-ea-bat");
+// Adafruit_MQTT_Publish test_feed_1  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-e6-temp");
+// Adafruit_MQTT_Publish test_feed_2  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-ea-temp");
+// Adafruit_MQTT_Publish test_feed_3  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-ea-rssi");
+// Adafruit_MQTT_Publish test_feed_4  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.ruuvi-ea-bat");
+Adafruit_MQTT_Publish dock_temp_bmp180  = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.dock-temp-bmp180");
+Adafruit_MQTT_Publish dock_temp_dht22   = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.dock-temp-dht22");
+Adafruit_MQTT_Publish dock_temp_water   = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.docktemp-water");
+Adafruit_MQTT_Publish dock_ldr1         = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/villaastrid.dock-ldr1");
+
 
 rfm69_publ_st rfm69_publ[AIO_PUBL_NBR_OF ] =
 { //  feed             zone                 name
-    { &test_feed_1, "OD1", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
-    { &test_feed_2, "OD2", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
-    { &test_feed_3, "OD3", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
-    { &test_feed_4, "OD4", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
+    // { &test_feed_1, "OD1", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
+    // { &test_feed_2, "OD2", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
+    // { &test_feed_3, "OD3", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
+    // { &test_feed_4, "OD4", "Temp", 0.0, false, UNIT_TEMPERATURE, 600000,   0}, 
+    { &dock_temp_bmp180,  "Dock", "T_bmp1", 0.0, false, UNIT_TEMPERATURE, 60000,   0}, 
+    { &dock_temp_dht22,   "Dock", "T_dht22", 0.0, false, UNIT_TEMPERATURE, 60000,   0}, 
+    { &dock_temp_water,   "Dock", "T_Water", 0.0, false, UNIT_TEMPERATURE, 60000,   0}, 
+    { &dock_ldr1,         "Dock", "ldr1", 0.0, false, UNIT_TEMPERATURE, 60000,   0}, 
+
 };
 
 extern gw_ctrl_st gw_ctrl;
@@ -165,4 +175,16 @@ void mqtt_task_update_feed_value(char *zone, char *label, float value)
         rfm69_publ[findx].updated = true;
     }
     else Serial.println(" No feed was found");
+}
+
+void mqtt_print_values(void)
+{
+  Serial.printf("MQTT Values >>>>>>>>>>>\n");
+  for (uint8_t i = 0; i<AIO_PUBL_NBR_OF; i++ )
+  {
+      Serial.printf("%s %s %f (%d) %d ms\n",
+      rfm69_publ[i].zone, rfm69_publ[i].label, 
+      rfm69_publ[i].value, rfm69_publ[i].updated, 
+      rfm69_publ[i].publ_next_ms);
+  } 
 }

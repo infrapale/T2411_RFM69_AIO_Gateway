@@ -41,4 +41,6 @@ void mqtt_task_initialize(void);
 
 void mqtt_task_update_feed_value(char *zone, char *label, float value);
 
+void mqtt_print_values(void);
+
 #endif
